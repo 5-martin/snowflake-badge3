@@ -22,6 +22,9 @@ ingredients_list = st.multiselect("Choose up to 5 ingredients:", my_dataframe)
 
 if ingredients_list:
     ingredients_string = ', '.join(ingredients_list)
+    for fruit in ingredients_list:
+        fruityvice_response = requests.get(f"https://fruityvice.com/api/fruit/{fruit}")
+        st.dataframe(data=fruityvice_response.json(), use_container_width=True)
         
     #st.write(ingredients_string)
     my_insert_stmt = f"INSERT INTO smoothies.public.orders(name_on_order,ingredients) VALUES ('{name_on_order}','{ingredients_string}')"
@@ -32,6 +35,4 @@ if ingredients_list:
         session.sql(my_insert_stmt).collect()
         st.success(f'Your Smoothie is ordered: {ingredients_string}', icon="✅")
 
-fruityvice_response = requests.get("https://fruityvice.com/api/fruit/watermelon")
-#st.text(fruityvice_response.json())
-st.dataframe(data=fruityvice_response.json(), use_container_width=True)
+
